@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "401967252710",
+    "project_id": "theshophup",
+    "storage_bucket": "theshophup.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401967252710:android:4ecc52294b0c90251a6727",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXMaQ7zkARYuUF2cuvJ4L1da3H_Wz8CUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
