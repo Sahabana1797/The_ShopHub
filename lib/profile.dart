@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/change_password.dart';
 import 'package:flutter_application_1/change_user_name.dart';
+import 'package:flutter_application_1/delete_my_account.dart';
 import 'package:flutter_application_1/login.dart';
 
 class Profile extends StatelessWidget {
@@ -40,7 +41,16 @@ class Profile extends StatelessWidget {
           }, 
           child: Text("Change Password")),SizedBox(height: 20),
           
-          
+           ElevatedButton(
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => DeleteMyAccount()),
+                (route) => false,
+              );
+            },
+            child: Text("Delete My Account"),
+          ),
         ],
       ),
     );
