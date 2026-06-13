@@ -18,8 +18,9 @@ class Login extends StatelessWidget {
         children: [
           Image.network(
            "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da",
+           height: 70,
           ),
-          Text("Welcome to My Day Application, Login to continue"),
+          Text("Welcome to To The ShopHub"),
           SizedBox(height: 20),
           Text("Email:"),
           TextFormField(
@@ -46,7 +47,7 @@ class Login extends StatelessWidget {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              if (email == "admin@idga.com.ng" && password == "12345678") {
+                if (email == "admin@theshophub.com.ng" && password == "12345678") {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => Dashboard()),
