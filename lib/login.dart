@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/sing_up.dart';
 import 'forget_password.dart';
 import 'dashboard.dart';
+import 'auth_services.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -17,10 +19,9 @@ class Login extends StatelessWidget {
       body: Column(
         children: [
           Image.network(
-           "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da",
-           height: 70,
+            "https://idga.com.ng/wp-content/uploads/2024/09/idga-logo.png",
           ),
-          Text("Welcome to To The ShopHub"),
+          Text("Welcome to The ShopHub, Login to continue"),
           SizedBox(height: 20),
           Text("Email:"),
           TextFormField(
@@ -46,15 +47,23 @@ class Login extends StatelessWidget {
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
-                if (email == "admin@theshophub.com.ng" && password == "12345678") {
-                Navigator.pushAndRemoveUntil(
+            onPressed: () async {
+              try {
+                await authServices.value.signIn(
+                  emailAddress: email,
+                  userpassword: password,
+                );
+
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Dashboard()),
-                  (route) => false,
                 );
-              } else {
-                incorrect = true;
+              } on FirebaseAuthException catch (e) {
+                print(e.message);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Incorrect email or password")),
+                );
               }
             },
             child: Text("Submit"),

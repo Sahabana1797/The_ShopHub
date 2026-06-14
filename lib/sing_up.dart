@@ -10,13 +10,17 @@ class SignUp extends StatelessWidget {
   String email = "";
   String password = "";
 
-  void register(BuildContext) async {
+  void register(BuildContext context) async {
     try {
       print(email);
       print(password);
       await authServices.value.register(
         emailAddress: email,
         userpassword: password,
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard()),
       );
     } on FirebaseAuthException catch (error) {
       print(error.message);
@@ -59,11 +63,7 @@ class SignUp extends StatelessWidget {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              register(BuildContext);
-              Navigator.push(
-               context,
-                 MaterialPageRoute(builder: (context) => Dashboard()),
-               );
+              register(context);
             },
             child: Text("Create Account"),
           ),
