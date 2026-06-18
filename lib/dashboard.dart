@@ -1,148 +1,239 @@
-import "package:flutter/material.dart";
-import 'indomie.dart';
-import 'profile.dart';
-import 'inverter.dart';
-class Dashboard extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/add_product.dart';
+import 'package:flutter_application_1/database_service.dart';
+import 'package:flutter_application_1/profile.dart';
+
+class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
+
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  final DatabaseService databaseService = DatabaseService();
+
+  Map<dynamic, dynamic> products = {};
+
+  @override
+  void initState() {
+    super.initState();
+    loadProducts();
+  }
+
+  Future<void> loadProducts() async {
+    final snapshot = await databaseService.read(
+      path: "products",
+    );
+
+    if (snapshot != null) {
+      setState(() {
+        products =
+            Map<dynamic, dynamic>.from(snapshot.value as Map);
+      });
+    }
+  }
+
+  Future<void> deleteProduct(String key) async {
+    await databaseService.delete(
+      path: "products/$key",
+    );
+
+    loadProducts();
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Product Deleted"),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orange.shade50,
+
       appBar: AppBar(
         centerTitle: true,
-        title: Text("The ShopHub"),
-        actions: [
-          GestureDetector(
-            onTap: () {
-           Navigator.push(context,
-             MaterialPageRoute(builder:(context)=>Profile()),
-             );   
-            },
-            child: Icon(Icons.person)),
-        ],
+        title: const Text(
+          "The ShopHub",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: const Color(0xffFF6F00),
         foregroundColor: Colors.white,
-        backgroundColor: const Color.fromARGB(204, 127, 92, 160),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Profile(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
 
-      body: ListView(
-        children: [
-          GestureDetector(
-            onTap: (){
-             Navigator.push(context,
-             MaterialPageRoute(builder:(context)=>Indomie()),
-             );
-            },
-            child: Card(
-              child: ListTile(
-                title: Text(
-                  "Indomie",
-            
-                  style: TextStyle(fontWeight: FontWeight(20)),
+      body: products.isEmpty
+          ? const Center(
+              child: Text(
+                "No Products Available",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-            
-                subtitle: Text("Buy 10 Cartons and get 1 free"),
-            
-                textColor: const Color.fromARGB(255, 200, 255, 3),
-            
-                trailing: Icon(Icons.fork_left),
-            
-                tileColor: const Color.fromARGB(255, 26, 1, 248),
-            
-                leading: Text("1"),
               ),
-            ),
-          ),
-
-          Card(
-            child: ListTile(
-              title: Text("Milk", style: TextStyle(fontWeight: FontWeight(20))),
-
-              subtitle: Text("Tasty and Creamy"),
-
-              trailing: Icon(Icons.food_bank),
-
-              tileColor: const Color.fromARGB(106, 87, 97, 82),
-
-              leading: Text("2"),
-            ),
-          ),
-
-          Card(
-            child: ListTile(
-              title: Text(
-                "Sugar",
-
-                style: TextStyle(fontWeight: FontWeight(20)),
+            )
+          : GridView.builder(
+              padding: const EdgeInsets.all(10),
+              gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 7,
+                mainAxisSpacing: 7,
+                childAspectRatio: 1.5,
               ),
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                String key =
+                    products.keys.elementAt(index);
 
-              subtitle: Text("Quality and Affordable"),
+                Map product = products[key];
 
-              trailing: Icon(Icons.shopping_bag),
+                return Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment:
+                          MainAxisAlignment.center,
+                      children: [
+                        const CircleAvatar(
+                          radius: 17,
+                          backgroundColor:
+                              Color(0xffFF6F00),
+                          child: Icon(
+                            Icons.shopping_bag,
+                            color: Colors.white,
+                          ),
+                        ),
 
-              tileColor: const Color.fromARGB(106, 87, 97, 82),
+                        Text(
+                          product["name"] ?? "",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontWeight:
+                                FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
 
-              leading: Text("3"),
+                        Text(
+                          "₦${product["price"]}",
+                          style: const TextStyle(
+                            color: Color(0xffFF6F00),
+                            fontWeight:
+                                FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+
+                        Text(
+                          "Qty: ${product["quantity"]}",
+                        ),
+
+                        Text(
+                          product["location"] ?? "",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+
+                        IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                          onPressed: () async {
+                            bool? confirm =
+                                await showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  AlertDialog(
+                                title: const Text(
+                                  "Delete Product",
+                                ),
+                                content: const Text(
+                                  "Are you sure?",
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(
+                                        context,
+                                        false,
+                                      );
+                                    },
+                                    child:
+                                        const Text("No"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(
+                                        context,
+                                        true,
+                                      );
+                                    },
+                                    child:
+                                        const Text("Yes"),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (confirm == true) {
+                              deleteProduct(key);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
-          ),
 
-          Card(
-            child: ListTile(
-              title: Text("Rice", style: TextStyle(fontWeight: FontWeight(20))),
-
-              subtitle: Text("The Heart of Every Meal"),
-
-              trailing: Icon(Icons.shopping_basket),
-
-              tileColor: const Color.fromARGB(106, 87, 97, 82),
-
-              leading: Text("4"),
+      floatingActionButton:
+          FloatingActionButton(
+        backgroundColor:
+            const Color(0xffFF6F00),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  const AddProductPage(),
             ),
-          ),
+          );
 
-          Card(
-            child: ListTile(
-              title: Text(
-                "Fire Extinguisher",
-
-                style: TextStyle(fontWeight: FontWeight(20)),
-              ),
-
-              subtitle: Text("One Year Guarantee"),
-
-              trailing: Icon(Icons.fire_extinguisher_rounded),
-
-              tileColor: const Color.fromARGB(106, 87, 97, 82),
-
-              leading: Text("5"),
-            ),
-          ),
-
-          GestureDetector(
-            onTap: (){
-             Navigator.push(context,
-             MaterialPageRoute(builder:(context)=>Inverter()),
-             );
-            },
-            child: Card(
-              child: ListTile(
-                title: Text(
-                  "Inverter",
-            
-                  style: TextStyle(fontWeight: FontWeight(20)),
-                ),
-            
-                subtitle: Text("Free Installation"),
-            
-                trailing: Icon(Icons.sunny),
-            
-                tileColor: const Color.fromARGB(106, 87, 97, 82),
-            
-                leading: Text("6"),
-              ),
-            ),
-          ),
-        ],
+          loadProducts();
+        },
       ),
     );
   }
-} 
+}

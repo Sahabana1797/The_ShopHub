@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "401967252710",
+    "firebase_url": "https://theshophup-default-rtdb.firebaseio.com",
     "project_id": "theshophup",
     "storage_bucket": "theshophup.firebasestorage.app"
   },

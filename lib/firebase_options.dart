@@ -46,6 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '401967252710',
     projectId: 'theshophup',
     authDomain: 'theshophup.firebaseapp.com',
+    databaseURL: 'https://theshophup-default-rtdb.firebaseio.com',
     storageBucket: 'theshophup.firebasestorage.app',
     measurementId: 'G-97558WDX6S',
   );
@@ -55,23 +56,24 @@ class DefaultFirebaseOptions {
     appId: '1:401967252710:android:4ecc52294b0c90251a6727',
     messagingSenderId: '401967252710',
     projectId: 'theshophup',
+    databaseURL: 'https://theshophup-default-rtdb.firebaseio.com',
     storageBucket: 'theshophup.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBOnaa7dlSEsCLgqrc3_hNDCXXe1pQ6Svw',
     appId: '1:401967252710:ios:f5aaf5a073bb4c3b1a6727',
     messagingSenderId: '401967252710',
     projectId: 'theshophup',
+    databaseURL: 'https://theshophup-default-rtdb.firebaseio.com',
     storageBucket: 'theshophup.firebasestorage.app',
     iosBundleId: 'com.example.flutterApplication1',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBOnaa7dlSEsCLgqrc3_hNDCXXe1pQ6Svw',
     appId: '1:401967252710:ios:f5aaf5a073bb4c3b1a6727',
     messagingSenderId: '401967252710',
     projectId: 'theshophup',
+    databaseURL: 'https://theshophup-default-rtdb.firebaseio.com',
     storageBucket: 'theshophup.firebasestorage.app',
     iosBundleId: 'com.example.flutterApplication1',
   );
@@ -82,6 +84,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '401967252710',
     projectId: 'theshophup',
     authDomain: 'theshophup.firebaseapp.com',
+    databaseURL: 'https://theshophup-default-rtdb.firebaseio.com',
     storageBucket: 'theshophup.firebasestorage.app',
     measurementId: 'G-691XZY5CL5',
   );
